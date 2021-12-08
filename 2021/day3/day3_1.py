@@ -1,6 +1,7 @@
 def parse(reports):
-    # bits = [0, 0, 0, 0, 0]
-    bits = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    assert reports
+
+    bits = [0] * (len(reports[0]) - 1)
     for report in reports:
         for n in range(0, len(report) - 1):
             bits[n] += int(report[n])
