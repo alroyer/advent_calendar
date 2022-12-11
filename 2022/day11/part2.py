@@ -5,6 +5,7 @@ from dataclasses import dataclass
 class Monkey:
     items: list[int] = None
     operation: str = None
+    operation_n: int = -1
     test: int = -1
     on_success: int = -1
     on_failure: int = -1
@@ -25,7 +26,15 @@ def read_data():
                 monkeys[id].items = [int(item.strip())
                                      for item in line[18:].split(',')]
             elif line.startswith('  Operation: '):
-                monkeys[id].operation = line[13:].strip()
+                operation = line[13:].strip()
+                if 'old * old' in operation:
+                    monkeys[id].operation = 1
+                elif '*' in operation:
+                    monkeys[id].operation = 2
+                    monkeys[id].operation_n = int(operation[11:])
+                else:
+                    monkeys[id].operation = 3
+                    monkeys[id].operation_n = int(operation[11:])
             elif line.startswith('  Test: divisible by '):
                 monkeys[id].test = int(line[21:].strip())
             elif line.startswith('    If true: throw to monkey '):
@@ -43,12 +52,12 @@ def main():
         print(f'round {round}')
         for monkey in monkeys.values():
             for item in monkey.items:
-                if 'old * old' in monkey.operation:
+                if monkey.operation == 1:
                     item = item * item
-                elif '*' in monkey.operation:
-                    item = item * int(monkey.operation[11:])
+                elif monkey.operation == 2:
+                    item = item * monkey.operation_n
                 else:
-                    item = (item + int(monkey.operation[11:]))
+                    item = item + monkey.operation_n
 
                 if item % monkey.test == 0:
                     monkeys[monkey.on_success].items.append(item)
