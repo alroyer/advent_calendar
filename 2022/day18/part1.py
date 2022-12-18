@@ -9,30 +9,18 @@ def read_data():
 
 def main():
     cube_positions = read_data()
-    # print(cube_positions)
 
     total_sides = 6 * len(cube_positions)
-    # print(total_sides)
 
     connected_sides = 0
     for cube1 in cube_positions:
         for cube2 in cube_positions:
-            x1 = cube1[0]
-            x2 = cube2[0]
-
-            y1 = cube1[1]
-            y2 = cube2[1]
-
-            z1 = cube1[2]
-            z2 = cube2[2]
-
-            dx = abs(x1 - x2)
-            dy = abs(y1 - y2)
-            dz = abs(z1 - z2)
+            dx = abs(cube1[0] - cube2[0])
+            dy = abs(cube1[1] - cube2[1])
+            dz = abs(cube1[2] - cube2[2])
 
             if dx + dy + dz == 1:
                 connected_sides += 1
-    # print(connected_sides)
 
     exposed_sides = total_sides - connected_sides
     print(f'exposed sides: {exposed_sides}')
