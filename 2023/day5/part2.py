@@ -38,24 +38,25 @@ def parse_data(data: list[str]) -> tuple[list[tuple[int, int]], list[tuple[str, 
 
 def find_min_location(seeds: list[tuple[int, int]], maps: list[tuple[str, list[Range]]]) -> int:
     locations = []
-    for _, ranges in maps:
-        for seed in seeds:
+    for seed in seeds:
+        location = seed
+        for _, ranges in maps:
             for range_ in ranges:
                 # TODO
-                start = max(range_.source_range[0], seed[0])
-                end = min(range_.source_range[1], seed[1])
+                start = max(range_.source_range[0], location[0])
+                end = min(range_.source_range[1], location[1])
                 if start < range_.source_range[1] and end >= range_.source_range[0]:
-                    locations.append(
-                        (
-                            range_.destination_range[0] + (start - range_.source_range[0]),
-                            range_.destination_range[0] + (end - range_.source_range[0]),
-                        )
+                    location = (
+                        range_.destination_range[0] + (start - range_.source_range[0]),
+                        range_.destination_range[0] + (end - range_.source_range[0]),
                     )
-                    if seed[0] < range_.source_range[0]:
-                        seeds.append((seed[0], range_.source_range[0]))
-                    if seed[1] >= range_.source_range[1]:
-                        seeds.append((range_.source_range[1], seed[1]))
+
+                    if location[0] < range_.source_range[0]:
+                        seeds.append((location[0], range_.source_range[0]))
+                    if location[1] >= range_.source_range[1]:
+                        seeds.append((range_.source_range[1], location[1]))
                     break
+        locations.append(location)
     return min([l[0] for l in locations])
 
 
