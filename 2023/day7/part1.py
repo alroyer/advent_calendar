@@ -1,5 +1,4 @@
 from enum import Enum
-from functools import cmp_to_key
 
 CARD_VALUE = {
     'A': 14,

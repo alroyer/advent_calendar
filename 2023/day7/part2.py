@@ -1,11 +1,9 @@
 from enum import Enum
-from functools import cmp_to_key
 
 CARD_VALUE = {
     'A': 14,
     'K': 13,
     'Q': 12,
-    # 'J': 11,
     'T': 10,
     '9': 9,
     '8': 8,
@@ -33,7 +31,20 @@ class Hand:
     def __init__(self, cards, bid):
         self.cards = cards
         self.bid = bid
-        self.hand_type = hand_type(self.cards)
+        if 1 in cards:
+            if (5 * [1]) == cards:
+                self.hand_type = HandType.FIVE_OF_A_KIND.value
+            else:
+                other_cards = set(cards)
+                other_cards.discard(1)
+
+                card_types = []
+                for card in other_cards:
+                    new_cards = [card if c == 1 else c for c in cards]
+                    card_types.append(hand_type(new_cards))
+                self.hand_type = max(card_types)
+        else:
+            self.hand_type = hand_type(self.cards)
 
     def __lt__(self, other) -> bool:
         return self.hand_type < other.hand_type or (self.hand_type == other.hand_type and self.cards < other.cards)
@@ -71,21 +82,7 @@ def read_data(path: str) -> list[Hand]:
         hands = []
         for d in data:
             hand, bid = d.strip().split(' ')
-            if 'JJJJJ' == hand:
-                hands.append(Hand([14, 14, 14, 14, 14], int(bid)))
-            elif 'J' in hand:
-                h = []
-                new_hands = []
-                for c in hand:
-                    if c != 'J':
-                        new_hand = hand.replace('J', c)
-                        if not new_hand in h:
-                            h.append(new_hand)
-                            new_hands.append(Hand([CARD_VALUE[c] for c in new_hand], int(bid)))
-                new_hands.sort()
-                hands.append(new_hands[-1])
-            else:
-                hands.append(Hand([CARD_VALUE[c] for c in hand], int(bid)))
+            hands.append(Hand([CARD_VALUE[c] for c in hand], int(bid)))
         return hands
 
 
