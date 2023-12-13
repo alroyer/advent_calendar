@@ -40,7 +40,11 @@ def count_arrangements(conditions, groups):
     for n in range(1, 2**unknown):
         new_conditions = arrange(conditions, f'{bin(n)[2:]:>0{unknown}}')
         if is_valid(new_conditions, groups):
-            count = count + 1
+            count += 1
+    if count == 0:
+        new_conditions = conditions.replace('?', '.')
+        if is_valid(new_conditions, groups):
+            count += 1
     return count
 
 
@@ -50,5 +54,5 @@ with open('input2.txt', 'r') as f:
 sum = 0
 for record in records:
     conditions, groups = format(record)
-    sum = sum + count_arrangements(conditions, groups)
+    sum += count_arrangements(conditions, groups)
 print(sum)
