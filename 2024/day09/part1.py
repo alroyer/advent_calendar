@@ -12,27 +12,27 @@ disk_map = list(map(int, data.replace('\n', '')))
 
 blocks = []
 id = 0
-for free_index, n in enumerate(disk_map):
-    if free_index % 2 == 0:
+for index, n in enumerate(disk_map):
+    if index % 2 == 0:
         blocks.append((n, id))
         id += 1
     elif n > 0:
         blocks.append((n, '.'))
 
-free_index = next_free_index(blocks)
-while free_index != -1:
+index = next_free_index(blocks)
+while index != -1:
     block_count, id = blocks.pop()
-    free_space_count, _ = blocks[free_index]
+    free_space_count, _ = blocks[index]
     if free_space_count == block_count:
-        blocks[free_index] = (block_count, id)
+        blocks[index] = (block_count, id)
     elif free_space_count > block_count:
-        del blocks[free_index]
-        blocks.insert(free_index, (free_space_count - block_count, '.'))
-        blocks.insert(free_index, (block_count, id))
+        del blocks[index]
+        blocks.insert(index, (free_space_count - block_count, '.'))
+        blocks.insert(index, (block_count, id))
     else:
-        blocks[free_index] = (free_space_count, id)
+        blocks[index] = (free_space_count, id)
         blocks.append((block_count - free_space_count, id))
-    free_index = next_free_index(blocks)
+    index = next_free_index(blocks)
 
 disk = []
 for block in blocks:
