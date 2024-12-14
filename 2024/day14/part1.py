@@ -37,10 +37,9 @@ width = 101
 
 seconds = 100
 
-for _ in range(seconds):
-    for robot in robots:
-        robot.pos.x = (robot.pos.x + robot.vel.x) % width
-        robot.pos.y = (robot.pos.y + robot.vel.y) % height
+for robot in robots:
+    robot.pos.x = (robot.pos.x + (robot.vel.x * seconds)) % width
+    robot.pos.y = (robot.pos.y + (robot.vel.y * seconds)) % height
 
 quadrants = [
     ((0, 0), (width // 2 - 1, height // 2 - 1)),
