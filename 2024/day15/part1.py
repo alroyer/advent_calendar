@@ -2,13 +2,10 @@ from dataclasses import dataclass
 from copy import copy
 
 
-@dataclass
+@dataclass(frozen=True)
 class Point:
     x: int
     y: int
-
-    def __hash__(self):
-        return hash(self.x) + hash(self.y)
 
 
 def print_map(m):
@@ -54,8 +51,8 @@ def get_boxes(walls, boxes, pos, move):
         boxes_to_move.append(box_pos)
         box_pos = get_next_pos(box_pos, move)
         if box_pos in walls:
-            return False, None
-    return True, reversed(boxes_to_move)
+            return None
+    return boxes_to_move
 
 
 with open('input3.txt') as f:
@@ -85,12 +82,11 @@ for move in moves:
     if next_pos in walls:
         continue
     elif next_pos in boxes:
-        can_move, boxes_to_move = get_boxes(walls, boxes, next_pos, move)
-        if not can_move or not boxes_to_move:
+        boxes_to_move = get_boxes(walls, boxes, next_pos, move)
+        if not boxes_to_move:
             continue
-        for boxe in boxes_to_move:
-            boxes.remove(boxe)
-            boxes.add(get_next_pos(boxe, move))
+        boxes.add(get_next_pos(boxes_to_move[-1], move))
+        boxes.remove(boxes_to_move[0])
         robot_pos = next_pos
     else:
         robot_pos = next_pos
@@ -98,6 +94,6 @@ for move in moves:
 print_all(height, width, walls, boxes, robot_pos)
 
 total = 0
-for boxe in boxes:
-    total += 100 * boxe.y + boxe.x
-print(total)
+for box in boxes:
+    total += 100 * box.y + box.x
+print(1413675, total)
