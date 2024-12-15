@@ -102,7 +102,7 @@ moves = list(filter(lambda d: '<' in d, data.split()))[0]
 
 walls, boxes, robot_pos, height, width = resize_map(map)
 
-for move in moves:
+for index, move in enumerate(moves):
     next_pos = get_next_pos(robot_pos, move)
     if next_pos in walls:
         continue
@@ -110,19 +110,17 @@ for move in moves:
         boxes_to_move = get_boxes_to_move(walls, boxes, next_pos, move)
         if not boxes_to_move:
             continue
-        if move == '<' or move == '>':
-            for box in reversed(boxes_to_move):
-                boxes[get_next_pos(box.pos, move)] = box.face
-            del boxes[boxes_to_move[0].pos]
-        else:
-            for box in reversed(boxes_to_move):
-                boxes[get_next_pos(box.pos, move)] = box.face
-                del boxes[box.pos]
+        next_boxes_pos = []
+        for box in boxes_to_move:
+            p = get_next_pos(box.pos, move)
+            assert p
+            next_boxes_pos.append(Box(p, box.face))
+            del boxes[box.pos]
+        for box in next_boxes_pos:
+            boxes[box.pos] = box.face
         robot_pos = next_pos
     else:
         robot_pos = next_pos
-
-    # print(move)
     # print_all(walls, boxes, robot_pos, height, width)
 
 total = 0
