@@ -27,7 +27,7 @@ def print_map(height, width, walls, start_pos, end_pos, path):
             elif point == end_pos:
                 print('E', end='')
             elif point in path:
-                print('X', end='')
+                print('O', end='')
             else:
                 print('.', end='')
         print()
@@ -64,10 +64,6 @@ for y in range(height):
 
 assert start_pos
 
-# print_map(height, width, walls, start_pos, end_pos)
-
-paths = []
-
 directions = [
     (1, 0),
     (-1, 0),
@@ -75,13 +71,12 @@ directions = [
     (0, -1),
 ]
 
-current_direction = (-1, 0)
-
 visited = set()
-to_visite = [(0, start_pos, current_direction)]
+to_visite = [(0, start_pos, (-1, 0), [])]
 
 while to_visite:
-    score, pos, direction = heapq.heappop(to_visite)
+    score, pos, direction, path = heapq.heappop(to_visite)
+    path.append(pos)
 
     if pos == end_pos:
         break
@@ -93,6 +88,8 @@ while to_visite:
         if cpos in walls or cpos in visited:
             continue
         new_score, new_direction = compute_score(cpos, pos, direction)
-        heapq.heappush(to_visite, (score + new_score, cpos, new_direction))
+        heapq.heappush(to_visite, (score + new_score, cpos, new_direction, copy(path)))
 
 print(score)
+
+print_map(height, width, walls, start_pos, end_pos, path)
