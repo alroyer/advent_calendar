@@ -77,7 +77,7 @@ def convert_path(path):
                 converted_path += 'v'
             else:
                 converted_path += '^'
-    return sorted(converted_path)
+    return converted_path
 
 
 def solve(string, pad):
