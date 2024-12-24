@@ -11,7 +11,6 @@ for d in data:
         wires[k] = int(v)
     elif '->' in d:
         wires_and_gates, out = d.split(' -> ')
-        wires[out] = None
 
         in1, gate, in2 = wires_and_gates.split(' ')
         operations.append((in1, gate, in2, out))
@@ -21,6 +20,9 @@ for d in data:
 
         if in2 not in wires:
             wires[in2] = None
+
+        if out not in wires:
+            wires[out] = None
 
 index = 0
 while operations:
