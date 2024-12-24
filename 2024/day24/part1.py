@@ -10,9 +10,9 @@ for d in data:
         k, v = d.split(': ')
         wires[k] = int(v)
     elif '->' in d:
-        wires_and_gates, out = d.split(' -> ')
+        operation, out = d.split(' -> ')
 
-        in1, gate, in2 = wires_and_gates.split(' ')
+        in1, gate, in2 = operation.split(' ')
         operations.append((in1, gate, in2, out))
 
         if in1 not in wires:
