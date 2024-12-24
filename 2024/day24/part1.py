@@ -10,32 +10,33 @@ for d in data:
         k, v = d.split(': ')
         wires[k] = int(v)
     elif '->' in d:
-        oper, output = d.split(' -> ')
-        wires[output] = None
+        wires_and_gates, out = d.split(' -> ')
+        wires[out] = None
 
-        input1, oper, input2 = oper.split(' ')
-        operations.append((input1, oper, input2, output))
+        in1, gate, in2 = wires_and_gates.split(' ')
+        operations.append((in1, gate, in2, out))
 
-        if input1 not in wires:
-            wires[input1] = None
+        if in1 not in wires:
+            wires[in1] = None
 
-        if input2 not in wires:
-            wires[input2] = None
+        if in2 not in wires:
+            wires[in2] = None
 
 index = 0
 while operations:
-    input1, oper, input2, output = operations[index]
-    if wires[input1] is None or wires[input2] is None:
-        index += 1
-        index %= len(operations)
+    in1, gate, in2, out = operations[index]
+
+    if wires[in1] is None or wires[in2] is None:
+        index = (index + 1) % len(operations)
         continue
 
-    if oper == 'AND':
-        wires[output] = wires[input1] & wires[input2]
-    elif oper == 'OR':
-        wires[output] = wires[input1] | wires[input2]
-    elif oper == 'XOR':
-        wires[output] = wires[input1] ^ wires[input2]
+    if gate == 'AND':
+        wires[out] = wires[in1] & wires[in2]
+    elif gate == 'OR':
+        wires[out] = wires[in1] | wires[in2]
+    elif gate == 'XOR':
+        wires[out] = wires[in1] ^ wires[in2]
+
     del operations[index]
     index = 0
 
